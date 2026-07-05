@@ -118,11 +118,14 @@
             transition: background-color 0.3s, border-color 0.3s;
         }
 
-        body.fullscreen-mode .left-panel { display: none; }
         body.fullscreen-mode .right-panel {
-            width: 100%;
-        min-height: 100vh;
-border-radius: 0px;
+        width: 100% !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+        border-radius: 0px !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
         }
 
         /* VISOR DE NÚMEROS */
