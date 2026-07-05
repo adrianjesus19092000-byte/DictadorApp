@@ -469,7 +469,13 @@
             dictando = true;
             document.getElementById('btnPlayPause').innerText = "PAUSAR";
             document.body.classList.add('fullscreen-mode'); 
+                    // Despertar voz
+            if ('speechSynthesis' in window) {
+                const dummy = new SpeechSynthesisUtterance("");
+                window.speechSynthesis.speak(dummy);
+            }
             ejecutarCiclo();
+
         }
 
         function pausarDictado() {
