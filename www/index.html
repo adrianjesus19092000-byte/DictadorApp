@@ -127,6 +127,9 @@
         top: 0;
         left: 0;
         }
+        
+
+
 
         /* VISOR DE NÚMEROS */
         .display-section {
@@ -138,6 +141,28 @@
             padding: 20px 0;
             overflow: hidden;
         }
+        
+.btn-exit {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--bg-btn-secondary);
+    color: var(--text-main);
+    border: 1px solid var(--border-btn);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    z-index: 20;
+}
+
+body.fullscreen-mode .btn-exit {
+    display: block;
+}
+
+        
 
         /* ESCALA EL DOBLE DE GRANDE */
         .current-number {
@@ -331,6 +356,8 @@
         </div>
 
         <div class="right-panel">
+            <button class="btn-exit" onclick="volverAInicio()">← SALIR</button>
+
             <button class="btn-settings-toggle" onclick="toggleSettings()">⚙️</button>
 
             <div class="settings-panel" id="settingsPanel">
@@ -591,6 +618,10 @@
                 document.getElementById('col-' + c).classList.toggle('selected', c === color);
             });
         }
+        function volverAInicio() {
+    document.body.classList.remove('fullscreen-mode');
+}
+
     </script>
 </body>
 </html>
