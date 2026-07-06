@@ -211,6 +211,21 @@ body.fullscreen-mode .btn-exit {
             border: none;
             cursor: pointer;
         }
+        
+        .btn-clean {
+    background: var(--bg-btn-secondary);
+    color: var(--text-main);
+    border: 1px solid var(--border-btn);
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px; /* Esto separará el botón de limpiar del botón 'Anterior' */
+}
+
         .btn-nav { 
             background-color: var(--bg-btn-secondary); 
             color: var(--btn-secondary-text); 
@@ -420,6 +435,7 @@ body.fullscreen-mode .btn-exit {
             </div>
 
             <div class="playback-controls">
+    <button class="btn-clean" onclick="limpiarApp()" title="Reiniciar App">↻</button>
                 <button class="btn-action btn-nav" onclick="anteriorNumero()">⏮️</button>
                 <button class="btn-action btn-main" id="btnPlayPause" onclick="toggleDictado()">INICIAR</button>
                 <button class="btn-action btn-nav" onclick="siguienteNumero()">⏭️</button>
@@ -625,6 +641,17 @@ body.fullscreen-mode .btn-exit {
     document.body.classList.remove('fullscreen-mode');
 }
 
+   function limpiarApp() {
+    if (confirm("¿Seguro que quieres borrar todo y cargar un archivo nuevo?")) {
+        numeros = []; 
+        indiceActual = 0;
+        document.getElementById('numInput').value = '';
+        document.getElementById('numDisplay').innerText = '---';
+        document.getElementById('navInfo').innerText = 'Índice: 0 / 0';
+        document.getElementById('filePicker').value = '';
+        resetApp();
+    }
+     
     </script>
 </body>
 </html>
