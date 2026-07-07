@@ -20,5 +20,6 @@
     <platform name="android">
         <splash src="splash.png" />
     </platform>
+    <plugin name="cordova-plugin-tts" spec="^0.2.3" />
 
 </widget>
