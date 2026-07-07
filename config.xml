@@ -25,6 +25,7 @@
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
         </config-file>
         <plugin name="cordova-plugin-tts" />
+        <plugin name="cordova-plugin-android-permissions" spec="^1.3.6" />
     </platform>
 
 </widget>
