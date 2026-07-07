@@ -467,6 +467,27 @@ body.fullscreen-mode .btn-exit {
             };
             lector.readAsText(archivo);
         });
+        // Función para solicitar permisos al usuario
+function solicitarPermisos() {
+    if (window.plugins && window.plugins.permissions) {
+        var permissions = window.plugins.permissions;
+        var listaPermisos = [
+            permissions.MODIFY_AUDIO_SETTINGS,
+            permissions.RECORD_AUDIO // Solicitamos permiso de audio para el TTS
+        ];
+
+        permissions.requestPermissions(listaPermisos, function(status) {
+            if (status.hasPermission) {
+                console.log("Permisos concedidos con éxito.");
+            } else {
+                console.warn("Permiso denegado por el usuario.");
+            }
+        }, function(err) {
+            console.error("Error al solicitar permisos: " + err);
+        });
+    }
+}
+
 
         function procesarTexto() {
             const rawText = document.getElementById('numInput').value;
@@ -506,6 +527,7 @@ body.fullscreen-mode .btn-exit {
         }
 
         function toggleDictado() {
+            solicitarPermisos();
             if (numeros.length === 0) {
                 procesarTexto();
                 if (numeros.length === 0) return;
