@@ -446,7 +446,7 @@ body.fullscreen-mode .btn-exit {
     </div>
 
     <script>
-        let numeros = [];
+                let numeros = [];
         let indiceActual = 0;
         let dictando = false;
         let timeoutId = null;
@@ -494,13 +494,15 @@ body.fullscreen-mode .btn-exit {
 
         function dictarNumero(texto) {
             if (!audioHabilitado) return;
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(texto);
-                utterance.lang = 'es-ES';
-                utterance.rate = 1.0;
-                window.speechSynthesis.speak(utterance);
-            }
+            TTS.speak({
+                text: texto,
+                locale: 'es-ES',
+                rate: 1.0
+            }, function () {
+                console.log('Audio ok');
+            }, function (reason) {
+                console.error('Error: ' + reason);
+            });
         }
 
         function toggleDictado() {
@@ -519,32 +521,25 @@ body.fullscreen-mode .btn-exit {
             dictando = true;
             document.getElementById('btnPlayPause').innerText = "PAUSAR";
             document.body.classList.add('fullscreen-mode'); 
-                    // Despertar voz
-            if ('speechSynthesis' in window) {
-                const dummy = new SpeechSynthesisUtterance("");
-                window.speechSynthesis.speak(dummy);
-            }
             ejecutarCiclo();
-
         }
 
         function pausarDictado() {
             dictando = false;
             document.getElementById('btnPlayPause').innerText = "CONTINUAR";
             if (timeoutId) clearTimeout(timeoutId);
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            TTS.speak({text: "", locale: 'es-ES'}, function(){}, function(){});
         }
 
         function ejecutarCiclo() {
             if (!dictando) return;
-
             if (indiceActual < numeros.length) {
                 actualizarPantalla();
                 dictarNumero(numeros[indiceActual]);
                 indiceActual++;
                 timeoutId = setTimeout(ejecutarCiclo, velocidadIntervalo);
             } else {
-                alert("Dictado finalizado por completo.");
+                alert("Dictado finalizado.");
                 resetApp();
             }
         }
@@ -552,7 +547,6 @@ body.fullscreen-mode .btn-exit {
         function siguienteNumero() {
             if (numeros.length === 0) return;
             if (timeoutId) clearTimeout(timeoutId);
-            
             if (indiceActual < numeros.length - 1) {
                 if(!dictando) indiceActual++;
                 actualizarPantalla();
@@ -565,7 +559,6 @@ body.fullscreen-mode .btn-exit {
         function anteriorNumero() {
             if (numeros.length === 0) return;
             if (timeoutId) clearTimeout(timeoutId);
-
             let ajuste = dictando ? 2 : 1;
             if (indiceActual - ajuste >= 0) {
                 indiceActual -= ajuste;
@@ -605,14 +598,12 @@ body.fullscreen-mode .btn-exit {
             audioHabilitado = status;
             document.getElementById('audioOn').classList.toggle('selected', status);
             document.getElementById('audioOff').classList.toggle('selected', !status);
-            if(!status && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+            if(!status) TTS.speak({text: "", locale: 'es-ES'}, function(){}, function(){});
         }
 
         function updateSpeedManual(val) {
             let parsed = parseFloat(val);
-            if (isNaN(parsed) || parsed <= 0) {
-                parsed = 1.5; 
-            }
+            if (isNaN(parsed) || parsed <= 0) parsed = 1.5; 
             velocidadIntervalo = parsed * 1000;
         }
 
@@ -621,7 +612,6 @@ body.fullscreen-mode .btn-exit {
             display.classList.remove(currentSizeClass);
             currentSizeClass = 'size-' + size;
             display.classList.add(currentSizeClass);
-
             ['normal', 'mediano', 'grande'].forEach(s => {
                 document.getElementById('size-' + s).classList.toggle('selected', s === size);
             });
@@ -632,26 +622,27 @@ body.fullscreen-mode .btn-exit {
             display.classList.remove(currentColorClass);
             currentColorClass = 'color-' + color;
             display.classList.add(currentColorClass);
-
             ['blanco', 'rojo', 'verde', 'amarillo', 'azul'].forEach(c => {
                 document.getElementById('col-' + c).classList.toggle('selected', c === color);
             });
         }
-        function volverAInicio() {
-    document.body.classList.remove('fullscreen-mode');
-}
 
-   function limpiarApp() {
-    if (confirm("¿Seguro que quieres borrar todo y cargar un archivo nuevo?")) {
-        numeros = []; 
-        indiceActual = 0;
-        document.getElementById('numInput').value = '';
-        document.getElementById('numDisplay').innerText = '---';
-        document.getElementById('navInfo').innerText = 'Índice: 0 / 0';
-        document.getElementById('filePicker').value = '';
-        resetApp();
-    }
-   }
+        function volverAInicio() {
+            document.body.classList.remove('fullscreen-mode');
+        }
+
+        function limpiarApp() {
+            if (confirm("¿Seguro que quieres borrar todo y cargar un archivo nuevo?")) {
+                numeros = []; 
+                indiceActual = 0;
+                document.getElementById('numInput').value = '';
+                document.getElementById('numDisplay').innerText = '---';
+                document.getElementById('navInfo').innerText = 'Índice: 0 / 0';
+                document.getElementById('filePicker').value = '';
+                resetApp();
+            }
+        }
+
      
     </script>
 </body>
